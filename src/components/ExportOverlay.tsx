@@ -34,7 +34,12 @@ export default function ExportOverlay({ status, progress, onCancel }: Props) {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm">
+    <div
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-label={isLoading ? "Loading video engine" : "Exporting video"}
+      >
       <div className="text-center space-y-6 max-w-xs px-6 animate-fade-in">
 
         <div className="mx-auto w-20 h-20">
@@ -64,18 +69,30 @@ export default function ExportOverlay({ status, progress, onCancel }: Props) {
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-label="Export progress"
+                aria-describedby="export-progress-text"
                 className="h-full bg-film-600 rounded-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
-              />
+                />
             </div>
-            <p className="text-xs font-heading font-semibold text-[var(--muted)]">
-              {progress}%
+            <p
+              id="export-progress-text"
+              className="text-xs font-heading font-semibold text-[var(--muted)]"
+              >
+              {progress}% completed
             </p>
             <p className="text-gray-500 text-xs mt-4">
               Press Escape to cancel
             </p>
           </div>
         )}
+        <button
+          type="button"
+          onClick={onCancel}
+          aria-label="Cancel export"
+          className="mt-4 text-xs text-red-500 hover:text-red-600 underline"
+          >
+          Cancel export
+        </button>
       </div>
     </div>
   );
