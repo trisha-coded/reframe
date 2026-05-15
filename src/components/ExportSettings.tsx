@@ -22,15 +22,17 @@ export default function ExportSettings({ recipe, onChange }: Props) {
           <span className="font-normal text-xs text-[var(--muted)] ml-1">CRF {recipe.quality}</span>
         </span>
       </div>
-      <input
-        id="quality-control"
-        type="range"
-        min={18}
-        max={30}
-        step={1}
-        value={recipe.quality}
-        onChange={(e) => onChange({ quality: Number(e.target.value) })}
-        className="w-full accent-film-600 cursor-pointer"
+     <input
+       id="quality-control"
+       type="range"
+       min={18}
+       max={30}
+       step={1}
+       value={recipe.quality}
+       onChange={(e) => onChange({ quality: Number(e.target.value) })}
+       aria-label="Export quality control (CRF value)"
+       aria-valuetext={`${label}, CRF ${recipe.quality}`}
+       className="w-full accent-film-600 cursor-pointer"
       />
       <div className="flex justify-between mt-1">
         <span className="text-[10px] text-[var(--muted)]">Best quality</span>
