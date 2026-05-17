@@ -56,21 +56,15 @@ export default function FileUpload({ onFileSelect, currentFile }: Props) {
         </div>
         <button
           type="button"
+          aria-label="Change uploaded video file"
           onClick={() => inputRef.current?.click()}
           className="text-xs font-heading font-semibold text-film-600 hover:text-film-700 uppercase tracking-wide shrink-0 transition-colors cursor-pointer"
         >
           Change <span className="text-[var(--muted)]">(Ctrl+O / Cmd+O)</span>
         </button>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="video/*"
-          className="hidden"
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (f) handleFile(f);
-          }}
-        />
+        <p id="upload-help" className="sr-only">
+          Supported formats include MP4, MOV, AVI, MKV, and WebM. You can drag and drop or press Enter to upload.
+        </p>
       </div>
     );
   }
@@ -79,11 +73,18 @@ export default function FileUpload({ onFileSelect, currentFile }: Props) {
     <div
       role="button"
       tabIndex={0}
+      aria-label="Upload video file by clicking or dragging and dropping"
+      aria-describedby="upload-help
       onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
       onClick={() => inputRef.current?.click()}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputRef.current?.click(); }}
+      onKeyDown={(e) => { 
+        if (e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          inputRef.current?.click(); 
+        }
+      }}
       className={cn(
         "group flex flex-col items-center justify-center gap-4 py-12 px-6",
         "border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200",
