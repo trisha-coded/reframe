@@ -54,6 +54,9 @@ export default function FileUpload({ onFileSelect, currentFile }: Props) {
           </p>
           <p className="text-xs text-[var(--muted)]">{fmt(currentFile.size)}</p>
         </div>
+        <div aria-live="polite" className="sr-only" role="status">
+          Selected file {currentFile.name}
+        </div>
         <button
           type="button"
           aria-label="Change uploaded video file"
@@ -62,27 +65,25 @@ export default function FileUpload({ onFileSelect, currentFile }: Props) {
         >
           Change <span className="text-[var(--muted)]">(Ctrl+O / Cmd+O)</span>
         </button>
-        <p id="upload-help" className="sr-only">
-          Supported formats include MP4, MOV, AVI, MKV, and WebM. You can drag and drop or press Enter to upload.
-        </p>
       </div>
     );
   }
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      aria-label="Upload video file by clicking or dragging and dropping"
-      aria-describedby="upload-help
+    <label
+      htmlFor="file-upload"
+      aria-label={
+      dragging
+        ? "Drop the file to upload"
+        : "Upload video file by clicking or dragging and dropping"
+      }
       onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      onClick={() => inputRef.current?.click()}
-      onKeyDown={(e) => { 
-        if (e.key === "Enter" || e.key === " "){
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.code === "Space") {
           e.preventDefault();
-          inputRef.current?.click(); 
+          inputRef.current?.click();
         }
       }}
       className={cn(
@@ -92,7 +93,8 @@ export default function FileUpload({ onFileSelect, currentFile }: Props) {
           ? "border-film-500 bg-film-50 scale-[1.01]"
           : "border-[var(--border)] bg-[var(--bg)] hover:border-film-400 hover:bg-film-50/40"
       )}
-    >
+    > 
+    
       <div className="w-20 h-20 opacity-80 group-hover:opacity-100 transition-opacity group-hover:scale-110 duration-200">
         <LottiePlayer animationData={uploadAnim} loop autoplay />
       </div>
@@ -116,17 +118,27 @@ export default function FileUpload({ onFileSelect, currentFile }: Props) {
       <p className="text-xs text-gray-500">
         Supports: MP4, MOV, AVI, MKV, WebM, and most video formats
       </p>
-      
+
+      <span className="sr-only">
+        Upload video file
+      </span>
+
       <input
         ref={inputRef}
+        id="file-upload"
         type="file"
         accept="video/*"
-        className="hidden"
+        className="sr-only"
+        aria-describedby="upload-help"
         onChange={(e) => {
           const f = e.target.files?.[0];
           if (f) handleFile(f);
         }}
       />
-    </div>
+      <p id="upload-help" className="sr-only">
+        Supported formats include MP4, MOV, AVI, MKV, and WebM.
+        You can drag and drop or press Enter to upload.
+      </p>
+    </label>
   );
 }
